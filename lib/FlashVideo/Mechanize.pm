@@ -3,6 +3,7 @@ package FlashVideo::Mechanize;
 use WWW::Mechanize;
 use LWP::Protocol::https;
 use FlashVideo::Downloader;
+use HTTP::Cookies::Mozilla;
 use Encode ();
 
 use strict;
@@ -10,7 +11,9 @@ use base "WWW::Mechanize";
 
 sub new {
   my $class = shift;
-  my $browser = $class->SUPER::new(autocheck => 0);
+
+  my $cookie_jar = HTTP::Cookies::Mozilla->new( file => "cookies.sqlite" );
+  my $browser = $class->SUPER::new(autocheck => 0, cookie_jar => $cookie_jar);
   $browser->agent_alias("Windows Mozilla");
 
   my $proxy = $App::get_flash_videos::opt{proxy};
